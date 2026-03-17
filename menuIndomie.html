@@ -1,0 +1,787 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Warung Order Menu</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      margin: 0;
+      background: linear-gradient(135deg, #fff8e7, #ffe9d6, #ffd6d6);
+      color: #2d2d2d;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: auto;
+      padding: 20px;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 10px;
+      color: #8b0000;
+      font-size: 2rem;
+      text-shadow: 1px 1px 0 #fff;
+    }
+
+    .subtitle {
+      text-align: center;
+      margin-bottom: 18px;
+      color: #7a3c00;
+      font-weight: 600;
+    }
+
+    .search-bar {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 18px;
+    }
+
+    .search-bar input {
+      width: 100%;
+      max-width: 420px;
+      padding: 10px 14px;
+      border-radius: 12px;
+      border: 2px solid #ffb347;
+      outline: none;
+      background: #fffef8;
+      font-size: 14px;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 1.3fr 1fr;
+      gap: 20px;
+    }
+
+    .menu-panel, .cart-panel {
+      background: rgba(255,255,255,0.95);
+      border-radius: 20px;
+      padding: 18px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+      border: 2px solid rgba(255, 183, 77, 0.3);
+    }
+
+    .section-title {
+      margin-top: 20px;
+      margin-bottom: 10px;
+      padding: 10px 14px;
+      border-radius: 14px;
+      color: white;
+      font-size: 1.1rem;
+      font-weight: bold;
+    }
+
+    .section-indomie { background: linear-gradient(90deg, #ff7b54, #ff4d6d); }
+    .section-nasi { background: linear-gradient(90deg, #f4a261, #e76f51); }
+    .section-drinks { background: linear-gradient(90deg, #4cc9f0, #4361ee); }
+
+    .menu-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 12px;
+    }
+
+    .menu-item {
+      background: linear-gradient(180deg, #ffffff, #fff8f0);
+      border: 2px solid #ffe1b3;
+      border-radius: 16px;
+      padding: 14px;
+      transition: 0.2s;
+    }
+
+    .menu-item:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 18px rgba(0,0,0,0.08);
+    }
+
+    .menu-item h3 {
+      margin: 0 0 8px 0;
+      font-size: 1rem;
+      color: #7a1f1f;
+    }
+
+    .price {
+      font-weight: bold;
+      color: #2b9348;
+      margin-bottom: 10px;
+    }
+
+    .add-btn {
+      width: 100%;
+      border: none;
+      border-radius: 10px;
+      padding: 10px;
+      background: linear-gradient(90deg, #ff9f1c, #ff6b35);
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .add-btn:hover {
+      opacity: 0.9;
+    }
+
+    .cart-title {
+      margin-top: 0;
+      color: #8b0000;
+    }
+
+    .cart-item {
+      background: linear-gradient(180deg, #fffef8, #fff7ec);
+      border: 2px solid #ffd8a8;
+      border-radius: 16px;
+      padding: 14px;
+      margin-bottom: 12px;
+    }
+
+    .cart-item-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 10px;
+      font-weight: bold;
+      color: #5c2c06;
+    }
+
+    .remove-btn {
+      border: none;
+      background: #ef233c;
+      color: white;
+      border-radius: 8px;
+      padding: 6px 10px;
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: bold;
+    }
+
+    .sub-label {
+      font-size: 13px;
+      font-weight: bold;
+      color: #6d4c41;
+      margin: 10px 0 6px;
+    }
+
+    .topping-group {
+      display: grid;
+      gap: 6px;
+      margin-bottom: 8px;
+    }
+
+    .topping-option {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      background: #fff;
+      padding: 6px 8px;
+      border-radius: 8px;
+      border: 1px solid #f1d2a7;
+    }
+
+    select, textarea {
+      width: 100%;
+      padding: 8px;
+      border-radius: 10px;
+      border: 1px solid #d9c2a5;
+      background: #fffdf9;
+      font-size: 13px;
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 60px;
+    }
+
+    .summary-line, .total-line {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 8px;
+      font-size: 14px;
+    }
+
+    .total-line {
+      font-weight: bold;
+      font-size: 1rem;
+      color: #1b5e20;
+      border-top: 2px dashed #c8b38c;
+      padding-top: 10px;
+      margin-top: 12px;
+    }
+
+    .confirm-btn {
+      width: 100%;
+      margin-top: 16px;
+      border: none;
+      border-radius: 12px;
+      padding: 12px;
+      background: linear-gradient(90deg, #2dc653, #1b9aaa);
+      color: white;
+      font-size: 1rem;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .confirm-btn:hover {
+      opacity: 0.92;
+    }
+
+    .empty-cart {
+      color: #777;
+      font-style: italic;
+      margin-top: 8px;
+    }
+
+    .mini {
+      font-size: 12px;
+      color: #555;
+      margin-top: 4px;
+    }
+
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.45);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 999;
+      padding: 16px;
+    }
+
+    .modal {
+      width: 100%;
+      max-width: 520px;
+      background: linear-gradient(180deg, #fffdf7, #fff3e6);
+      border-radius: 20px;
+      padding: 20px;
+      box-shadow: 0 18px 35px rgba(0,0,0,0.18);
+      border: 2px solid #ffd6a5;
+    }
+
+    .modal h3 {
+      margin-top: 0;
+      color: #8b0000;
+    }
+
+    .payment-list {
+      display: grid;
+      gap: 10px;
+      margin: 14px 0;
+    }
+
+    .payment-option {
+      border: 2px solid #ffd6a5;
+      border-radius: 12px;
+      padding: 12px;
+      cursor: pointer;
+      font-weight: bold;
+      background: #fff;
+      transition: 0.2s;
+    }
+
+    .payment-option:hover {
+      transform: translateY(-1px);
+    }
+
+    .payment-option.selected {
+      border-color: #2dc653;
+      background: #eaffea;
+    }
+
+    .modal-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .secondary-btn, .primary-btn {
+      flex: 1;
+      border: none;
+      border-radius: 12px;
+      padding: 12px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .secondary-btn {
+      background: #e0e0e0;
+    }
+
+    .primary-btn {
+      background: linear-gradient(90deg, #ff9f1c, #ff6b35);
+      color: white;
+    }
+
+    .bill-box {
+      margin-top: 16px;
+      background: linear-gradient(180deg, #f0fff4, #e8fff0);
+      border: 2px solid #b7efc5;
+      border-radius: 16px;
+      padding: 14px;
+    }
+
+    .thank-you {
+      margin-top: 12px;
+      padding: 14px;
+      border-radius: 14px;
+      background: linear-gradient(90deg, #d8f3dc, #b7e4c7);
+      border: 2px solid #95d5b2;
+      font-weight: bold;
+      color: #1b4332;
+    }
+
+    @media (max-width: 900px) {
+      .layout {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🍚🥤 Warung Order Menu</h1>
+    <div class="subtitle">Colorful custom ordering • Separate toppings per item • Easy for group orders</div>
+
+    <div class="search-bar">
+      <input type="text" id="searchInput" placeholder="Search menu item..." oninput="renderMenu()">
+    </div>
+
+    <div class="layout">
+      <div class="menu-panel">
+        <div id="menuContainer"></div>
+      </div>
+
+      <div class="cart-panel">
+        <h2 class="cart-title">🧾 Current Order</h2>
+        <div id="cartContainer"></div>
+        <div id="orderSummary"></div>
+        <button class="confirm-btn" onclick="openPaymentModal()">Confirm Order</button>
+        <div id="thankYouMessage"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Payment Modal -->
+  <div class="modal-overlay" id="paymentModal">
+    <div class="modal">
+      <div id="paymentStep1">
+        <h3>Select Payment Method</h3>
+        <div class="payment-list" id="paymentOptions"></div>
+        <div class="modal-actions">
+          <button class="secondary-btn" onclick="closePaymentModal()">Back</button>
+          <button class="primary-btn" onclick="goToConfirmStep()">Continue</button>
+        </div>
+      </div>
+
+      <div id="paymentStep2" style="display:none;">
+        <h3>Confirm Order</h3>
+        <p id="selectedPaymentText"></p>
+        <p>Are you sure you want to confirm this order?</p>
+        <div class="modal-actions">
+          <button class="secondary-btn" onclick="backToPaymentStep()">No</button>
+          <button class="primary-btn" onclick="finalizeOrder()">Yes</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const indomieToppings = [
+      { name: "None", price: 0 },
+      { name: "Bakso", price: 5000 },
+      { name: "Sosis", price: 5000 },
+      { name: "Telur Ceplok", price: 5000 },
+      { name: "Keju", price: 5000 }
+    ];
+
+    const geprekToppings = [
+      { name: "None", price: 0 },
+      { name: "Keju Mozzarella", price: 5000 },
+      { name: "Telur Ceplok", price: 5000 },
+      { name: "Sambal Matah", price: 2000 },
+      { name: "Sambal Bawang", price: 2000 },
+      { name: "Sambal Hijau", price: 2000 },
+      { name: "Sambal Terasi", price: 2000 }
+    ];
+
+    const menuData = [
+      {
+        section: "Indomie",
+        className: "section-indomie",
+        items: [
+          { name: "Indomie Goreng", price: 12000, type: "indomie" },
+          { name: "Indomie Goreng Aceh", price: 14000, type: "indomie" },
+          { name: "Indomie Goreng Rendang", price: 14000, type: "indomie" },
+          { name: "Indomie Kuah Ayam Bawang", price: 12000, type: "indomie" },
+          { name: "Indomie Kuah Kari Ayam", price: 12000, type: "indomie" },
+          { name: "Indomie Kuah Soto", price: 12000, type: "indomie" }
+        ]
+      },
+      {
+        section: "Nasi",
+        className: "section-nasi",
+        items: [
+          { name: "Nasi Ayam Geprek", price: 25000, type: "geprek" },
+          { name: "Nasi Goreng Ayam", price: 25000, type: "nasi" },
+          { name: "Nasi Goreng Kambing", price: 28000, type: "nasi" },
+          { name: "Nasi Goreng Kornet", price: 28000, type: "nasi" },
+          { name: "Nasi Goreng Sapi", price: 28000, type: "nasi" },
+          { name: "Nasi Goreng Telur", price: 20000, type: "nasi" }
+        ]
+      },
+      {
+        section: "Drinks",
+        className: "section-drinks",
+        items: [
+          { name: "Air Mineral", price: 4000, type: "drink" },
+          { name: "Es Jeruk", price: 7000, type: "drink" },
+          { name: "Es Teh Manis", price: 5000, type: "drink" },
+          { name: "Es Teh Tawar", price: 5000, type: "drink" },
+          { name: "Kopi Good Day Cappuccino", price: 7000, type: "drink" },
+          { name: "Kopi Kapal Hitam", price: 7000, type: "drink" },
+          { name: "Kopi Susu", price: 7000, type: "drink" },
+          { name: "Teh Manis Hangat", price: 5000, type: "drink" },
+          { name: "Teh Tawar Hangat", price: 5000, type: "drink" }
+        ]
+      }
+    ];
+
+    let cart = [];
+    let selectedPaymentMethod = "";
+
+    function formatRupiah(value) {
+      return "Rp " + value.toLocaleString("id-ID");
+    }
+
+    function renderMenu() {
+      const menuContainer = document.getElementById("menuContainer");
+      const query = document.getElementById("searchInput").value.toLowerCase().trim();
+
+      menuContainer.innerHTML = "";
+
+      menuData.forEach(section => {
+        const filteredItems = section.items.filter(item =>
+          item.name.toLowerCase().includes(query)
+        );
+
+        if (filteredItems.length === 0) return;
+
+        const sectionTitle = document.createElement("div");
+        sectionTitle.className = `section-title ${section.className}`;
+        sectionTitle.textContent = section.section;
+        menuContainer.appendChild(sectionTitle);
+
+        const grid = document.createElement("div");
+        grid.className = "menu-grid";
+
+        filteredItems.forEach(item => {
+          const card = document.createElement("div");
+          card.className = "menu-item";
+          card.innerHTML = `
+            <h3>${item.name}</h3>
+            <div class="price">${formatRupiah(item.price)}</div>
+            <button class="add-btn" onclick="addToCart('${item.name.replace(/'/g, "\\'")}')">+ Add 1x</button>
+          `;
+          grid.appendChild(card);
+        });
+
+        menuContainer.appendChild(grid);
+      });
+    }
+
+    function addToCart(itemName) {
+      let foundItem = null;
+
+      for (const section of menuData) {
+        const item = section.items.find(i => i.name === itemName);
+        if (item) {
+          foundItem = item;
+          break;
+        }
+      }
+
+      if (!foundItem) return;
+
+      const newItem = {
+        id: Date.now() + Math.random(),
+        name: foundItem.name,
+        basePrice: foundItem.price,
+        type: foundItem.type,
+        toppings: [],
+        spiceLevel: (foundItem.type === "nasi" || foundItem.type === "geprek") ? 1 : null,
+        note: ""
+      };
+
+      // Default "None" only for indomie/geprek at start (can be changed)
+      if (foundItem.type === "indomie") {
+        newItem.toppings = [];
+      }
+      if (foundItem.type === "geprek") {
+        newItem.toppings = [];
+      }
+
+      cart.push(newItem);
+      renderCart();
+    }
+
+    function toggleTopping(itemId, toppingName, toppingPrice, type) {
+      const item = cart.find(i => i.id === itemId);
+      if (!item) return;
+
+      const toppingList = type === "geprek" ? geprekToppings : indomieToppings;
+
+      if (toppingName === "None") {
+        item.toppings = [];
+        renderCart();
+        return;
+      }
+
+      // remove "None" behavior by just allowing empty array for none
+      const exists = item.toppings.find(t => t.name === toppingName);
+      if (exists) {
+        item.toppings = item.toppings.filter(t => t.name !== toppingName);
+      } else {
+        item.toppings.push({ name: toppingName, price: toppingPrice });
+      }
+
+      renderCart();
+    }
+
+    function updateSpiceLevel(itemId, value) {
+      const item = cart.find(i => i.id === itemId);
+      if (!item) return;
+      item.spiceLevel = parseInt(value);
+      renderCart();
+    }
+
+    function updateNote(itemId, value) {
+      const item = cart.find(i => i.id === itemId);
+      if (!item) return;
+      item.note = value;
+    }
+
+    function removeItem(itemId) {
+      cart = cart.filter(item => item.id !== itemId);
+      renderCart();
+    }
+
+    function getItemTotal(item) {
+      const toppingTotal = item.toppings.reduce((sum, t) => sum + t.price, 0);
+      return item.basePrice + toppingTotal;
+    }
+
+    function renderCart() {
+      const cartContainer = document.getElementById("cartContainer");
+      const orderSummary = document.getElementById("orderSummary");
+      const thankYouMessage = document.getElementById("thankYouMessage");
+
+      if (cart.length > 0) {
+        // clear thank you if user edits new order later
+        // but only if they start ordering again after last purchase
+      }
+
+      if (cart.length === 0) {
+        cartContainer.innerHTML = `<div class="empty-cart">No items yet. Add menu items to start ordering.</div>`;
+        orderSummary.innerHTML = "";
+        return;
+      }
+
+      cartContainer.innerHTML = "";
+
+      cart.forEach((item, index) => {
+        const card = document.createElement("div");
+        card.className = "cart-item";
+
+        let toppingHTML = "";
+        let spiceHTML = "";
+
+        if (item.type === "indomie") {
+          toppingHTML = `
+            <div class="sub-label">Add Topping (optional)</div>
+            <div class="topping-group">
+              ${indomieToppings.map(t => `
+                <label class="topping-option">
+                  <input
+                    type="checkbox"
+                    ${item.toppings.some(tp => tp.name === t.name) ? "checked" : ""}
+                    onchange="toggleTopping(${item.id}, '${t.name.replace(/'/g, "\\'")}', ${t.price}, 'indomie')"
+                  />
+                  <span>${t.name} ${t.price > 0 ? `(+${formatRupiah(t.price)})` : ""}</span>
+                </label>
+              `).join("")}
+            </div>
+          `;
+        }
+
+        if (item.type === "geprek") {
+          toppingHTML = `
+            <div class="sub-label">Add Topping / Sambal (optional)</div>
+            <div class="topping-group">
+              ${geprekToppings.map(t => `
+                <label class="topping-option">
+                  <input
+                    type="checkbox"
+                    ${item.toppings.some(tp => tp.name === t.name) ? "checked" : ""}
+                    onchange="toggleTopping(${item.id}, '${t.name.replace(/'/g, "\\'")}', ${t.price}, 'geprek')"
+                  />
+                  <span>${t.name} ${t.price > 0 ? `(+${formatRupiah(t.price)})` : ""}</span>
+                </label>
+              `).join("")}
+            </div>
+          `;
+        }
+
+        if (item.type === "nasi" || item.type === "geprek") {
+          spiceHTML = `
+            <div class="sub-label">Spice Level</div>
+            <select onchange="updateSpiceLevel(${item.id}, this.value)">
+              <option value="1" ${item.spiceLevel === 1 ? "selected" : ""}>1</option>
+              <option value="2" ${item.spiceLevel === 2 ? "selected" : ""}>2</option>
+              <option value="3" ${item.spiceLevel === 3 ? "selected" : ""}>3</option>
+              <option value="4" ${item.spiceLevel === 4 ? "selected" : ""}>4</option>
+              <option value="5" ${item.spiceLevel === 5 ? "selected" : ""}>5</option>
+            </select>
+          `;
+        }
+
+        card.innerHTML = `
+          <div class="cart-item-header">
+            <span>${index + 1}. ${item.name} x1</span>
+            <button class="remove-btn" onclick="removeItem(${item.id})">Remove</button>
+          </div>
+
+          ${toppingHTML}
+          ${spiceHTML}
+
+          <div class="sub-label">Special Note</div>
+          <textarea placeholder="Example: less spicy, no onion, extra hot..." oninput="updateNote(${item.id}, this.value)">${item.note}</textarea>
+
+          <div class="summary-line">
+            <span>Item Total</span>
+            <span>${formatRupiah(getItemTotal(item))}</span>
+          </div>
+        `;
+
+        cartContainer.appendChild(card);
+      });
+
+      const total = cart.reduce((sum, item) => sum + getItemTotal(item), 0);
+
+      orderSummary.innerHTML = `
+        <div class="total-line">
+          <span>Total</span>
+          <span>${formatRupiah(total)}</span>
+        </div>
+      `;
+    }
+
+    function openPaymentModal() {
+      if (cart.length === 0) {
+        alert("No orders yet.");
+        return;
+      }
+
+      selectedPaymentMethod = "";
+      document.getElementById("paymentStep1").style.display = "block";
+      document.getElementById("paymentStep2").style.display = "none";
+      renderPaymentOptions();
+      document.getElementById("paymentModal").style.display = "flex";
+    }
+
+    function closePaymentModal() {
+      document.getElementById("paymentModal").style.display = "none";
+    }
+
+    function renderPaymentOptions() {
+      const methods = ["QRIS", "BCA Virtual Account", "Debit / Credit", "Pay at Counter"];
+      const container = document.getElementById("paymentOptions");
+
+      container.innerHTML = methods.map(method => `
+        <div class="payment-option ${selectedPaymentMethod === method ? "selected" : ""}"
+             onclick="selectPaymentMethod('${method.replace(/'/g, "\\'")}')">
+          ${method}
+        </div>
+      `).join("");
+    }
+
+    function selectPaymentMethod(method) {
+      selectedPaymentMethod = method;
+      renderPaymentOptions();
+    }
+
+    function goToConfirmStep() {
+      if (!selectedPaymentMethod) {
+        alert("Please select a payment method first.");
+        return;
+      }
+
+      document.getElementById("paymentStep1").style.display = "none";
+      document.getElementById("paymentStep2").style.display = "block";
+      document.getElementById("selectedPaymentText").textContent = "Payment Method: " + selectedPaymentMethod;
+    }
+
+    function backToPaymentStep() {
+      document.getElementById("paymentStep1").style.display = "block";
+      document.getElementById("paymentStep2").style.display = "none";
+    }
+
+    function finalizeOrder() {
+      const thankYouMessage = document.getElementById("thankYouMessage");
+      const grandTotal = cart.reduce((sum, item) => sum + getItemTotal(item), 0);
+
+      let billHtml = `<div class="bill-box"><h3>🧾 Bill Summary</h3>`;
+
+      cart.forEach((item, index) => {
+        billHtml += `
+          <div class="summary-line">
+            <span>${index + 1}. ${item.name} x1</span>
+            <span>${formatRupiah(getItemTotal(item))}</span>
+          </div>
+        `;
+
+        if (item.type === "nasi" || item.type === "geprek") {
+          billHtml += `<div class="mini">Spice Level: ${item.spiceLevel}</div>`;
+        }
+
+        if (item.toppings.length > 0) {
+          billHtml += `<div class="mini">Toppings: ${item.toppings.map(t => t.name).join(", ")}</div>`;
+        } else if (item.type === "indomie" || item.type === "geprek") {
+          billHtml += `<div class="mini">Toppings: None</div>`;
+        }
+
+        if (item.note.trim()) {
+          billHtml += `<div class="mini">Note: ${item.note.trim()}</div>`;
+        }
+      });
+
+      billHtml += `
+        <div class="total-line">
+          <span>Total</span>
+          <span>${formatRupiah(grandTotal)}</span>
+        </div>
+        <div class="mini" style="margin-top:8px;">Payment: ${selectedPaymentMethod}</div>
+      </div>
+      <div class="thank-you">Thank you for your order! 🎉 Your order has been confirmed.</div>
+      `;
+
+      thankYouMessage.innerHTML = billHtml;
+
+      cart = [];
+      renderCart();
+      closePaymentModal();
+    }
+
+    renderMenu();
+    renderCart();
+  </script>
+</body>
+</html>
